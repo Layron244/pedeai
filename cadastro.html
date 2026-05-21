@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Cadastro</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<div class="login">
+
+    <h1>🍔 Cadastro</h1>
+
+    <form action="php/cadastrar.php" method="POST">
+
+        <input type="text" name="usuario" placeholder="Usuário">
+
+        <input type="password" name="senha" placeholder="Senha">
+
+        <select name="tipo">
+
+    <option value="cliente">
+        Cliente
+    </option>
+
+    <option value="dono">
+        Estabelecimento
+    </option>
+
+    <option value="admin">
+        Administrador
+    </option>
+
+</select>
+
+        <button type="submit">
+            Cadastrar
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
