@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Dono - Burger Vault</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        
+        :root { --primary: #ff7300; --dark: #eb8500; }
+        body { background: #f1f4f9; font-family: 'Segoe UI', sans-serif; }
+        .sidebar { background: var(--dark); color: white; min-height: 100vh; padding: 20px; }
+        .card-admin { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .btn-primary { background: var(--primary); border: none; }
+       .img-preview {
+    width: 60px;
+    height: 60px;
+    object-fit: cover; 
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 sidebar d-none d-md-block">
+                <h4>🍔 tonhão hamburgueres</h4>
+                <hr>
+                <p class="fw-bold">Editar Cardápio</p>
+            </div>
+            <div class="col-md-10 p-4">
+                <a href="index.html" class="btn-loja">
+                         🍔 Tonho Lanches - Abrir Cardapio
+                 </a>
+                <div class="card card-admin p-4 mb-4">
+                    <h5>Adicionar Novo Item</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label small">Nome do Lanche</label>
+                            <input type="text" id="nome" class="form-control" placeholder="Ex: X-Bacon Supremo">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">Preço (R$)</label>
+                            <input type="number" id="preco" class="form-control" placeholder="29.90">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Foto do Produto</label>
+                            <input type="file" id="foto" class="form-control" accept="image/*">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-primary w-100" onclick="salvarProduto()">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-admin p-4">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Foto</th>
+                                <th>Nome</th>
+                                <th>Preço</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-produtos"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- TRAVA DE SEGURANÇA DO SaaS ---
+const lojaEstaAtiva = localStorage.getItem('loja_ativa') !== 'false';
+
+if (!lojaEstaAtiva) {
+    // Se estiver bloqueado, limpa a tela e mostra o aviso
+    document.body.innerHTML = `
+        <div style="height: 100vh; display: flex; align-items: center; justify-content: center; background: #1d3557; color: white; flex-direction: column; text-align: center; font-family: sans-serif;">
+            <h1>⚠️ ACESSO BLOQUEADO</h1>
+            <p>Sua assinatura está vencida ou sua conta foi suspensa.</p>
+            <p>Entre em contato com o Administrador Geral para regularizar.</p>
+            <button onclick="location.reload()" class="btn btn-outline-light mt-3">Tentar Novamente</button>
+        </div>
+    `;
+    throw new Error("Acesso negado"); // Para a execução do restante do script
+}
+        let produtos = JSON.parse(localStorage.getItem('db_produtos')) || [];
+
+        function salvarProduto() {
+            const nome = document.getElementById('nome').value;
+            const preco = document.getElementById('preco').value;
+            const fotoInput = document.getElementById('foto');
+            
+            if (fotoInput.files && fotoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const novoItem = {
+                        id: Date.now(),
+                        nome: nome,
+                        preco: parseFloat(preco).toFixed(2),
+                        imagem: e.target.result // Aqui salva a foto como texto
+                    };
+                    produtos.push(novoItem);
+                    localStorage.setItem('db_produtos', JSON.stringify(produtos));
+                    location.reload();
+                };
+                reader.readAsDataURL(fotoInput.files[0]);
+            }
+        }
+
+        function remover(id) {
+            produtos = produtos.filter(p => p.id !== id);
+            localStorage.setItem('db_produtos', JSON.stringify(produtos));
+            render();
+        }
+
+        function render() {
+            const lista = document.getElementById('tabela-produtos');
+            lista.innerHTML = produtos.map(p => `
+                <tr>
+                    <td><img src="${p.imagem}" class="img-preview"></td>
+                    <td><strong>${p.nome}</strong></td>
+                    <td>R$ ${p.preco}</td>
+                    <td><button class="btn btn-sm btn-outline-danger" onclick="remover(${p.id})">Excluir</button></td>
+                </tr>
+            `).join('');
+        }
+        render();
+    </script>
+    <script>
+        
+        function alternar() {
+            let atual = localStorage.getItem('loja_ativa') !== 'false';
+            localStorage.setItem('loja_ativa', !atual);
+            render();
+        }
+
+        function render() {
+            let ativa = localStorage.getItem('loja_ativa') !== 'false';
+            const btn = document.getElementById('btn-toggle');
+            const label = document.getElementById('status-label');
+            
+            label.innerText = ativa ? "ATIVO" : "BLOQUEADO";
+            label.style.color = ativa ? "#80ffdb" : "#ff4d6d";
+            btn.innerText = ativa ? "Bloquear Loja" : "Ativar Loja";
+            btn.className = ativa ? "btn btn-danger w-100" : "btn btn-success w-100";
+        }
+        render();
+    </script>
+</body>
+</html>

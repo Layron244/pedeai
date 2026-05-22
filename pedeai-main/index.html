@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tonho Lanches | Cardápio</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="css/cliente.css">
+
+</head>
+<body>
+
+    <!-- APP -->
+
+    <div id="conteudo-app">
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div class="topo">
+
+                <div>
+
+                    <h4 class="mb-0">
+                        Tonho Lanches 🍔
+                    </h4>
+
+                    <small>
+                        • Aberto agora •
+                    </small>
+
+                </div>
+
+                <!-- LOGIN -->
+
+                <div class="acoes-login">
+
+                    <a href="login.html" class="btn-login">
+
+                        Entrar
+
+                    </a>
+
+                    <a href="cadastro.html" class="btn-cadastro">
+
+                        Cadastrar
+
+                    </a>
+
+                    <button
+                        class="btn-endereco"
+                        onclick="abrirEndereco()"
+                    >
+
+                        📍 Salvar Endereço
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CARDÁPIO -->
+
+        <div
+            class="container mt-4"
+            id="lista-cardapio"
+        >
+
+        </div>
+
+        <!-- CARRINHO -->
+
+        <div
+            class="cart-bar"
+            onclick="abrirModalPedido()"
+        >
+
+            <div>
+
+                <span class="total-label">
+
+                    Finalizar Pedido
+
+                </span>
+
+                <span
+                    id="total-carrinho"
+                    class="total-valor"
+                >
+
+                    R$ 0,00
+
+                </span>
+
+            </div>
+
+            <span class="fw-bold">
+
+                Ver Pedido →
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- LOJA FECHADA -->
+
+    <div id="bloqueio">
+
+        <h1>😴</h1>
+
+        <h3>Loja Fechada</h3>
+
+        <p class="text-muted">
+
+            No momento não estamos aceitando pedidos.
+
+        </p>
+
+    </div>
+
+    <!-- MODAL PEDIDO -->
+
+    <div id="modalPedido" class="modal-pedido">
+
+        <div class="modal-conteudo">
+
+            <h3>
+
+                🛒 Finalizar Pedido
+
+            </h3>
+
+            <div id="resumo-pedido"></div>
+
+            <hr>
+
+            <input
+                type="text"
+                id="cliente-nome"
+                class="form-control"
+                placeholder="Seu nome"
+            >
+
+            <input
+                type="text"
+                id="cliente-rua"
+                class="form-control"
+                placeholder="Rua e número"
+            >
+
+            <input
+                type="text"
+                id="cliente-bairro"
+                class="form-control"
+                placeholder="Bairro"
+            >
+
+            <input
+                type="text"
+                id="cliente-ref"
+                class="form-control"
+                placeholder="Referência"
+            >
+
+            <button
+                class="btn-endereco-padrao"
+                onclick="usarEnderecoPadrao()"
+            >
+
+                Usar endereço padrão
+
+            </button>
+
+            <button
+                class="btn-enviar"
+                onclick="finalizarPedido()"
+            >
+
+                Enviar WhatsApp
+
+            </button>
+
+            <button
+                class="btn-fechar"
+                onclick="fecharModal()"
+            >
+
+                Fechar
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL ENDEREÇO -->
+
+    <div id="modalEndereco" class="modal-pedido">
+
+        <div class="modal-conteudo">
+
+            <h3>
+
+                📍 Endereço Padrão
+
+            </h3>
+
+            <input
+                type="text"
+                id="endereco-rua"
+                class="form-control"
+                placeholder="Rua e número"
+            >
+
+            <input
+                type="text"
+                id="endereco-bairro"
+                class="form-control"
+                placeholder="Bairro"
+            >
+
+            <input
+                type="text"
+                id="endereco-ref"
+                class="form-control"
+                placeholder="Referência"
+            >
+
+            <button
+                class="btn-enviar"
+                onclick="salvarEndereco()"
+            >
+
+                Salvar Endereço
+
+            </button>
+
+            <button
+                class="btn-fechar"
+                onclick="fecharEndereco()"
+            >
+
+                Fechar
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPT -->
+
+    <script>
+
+        // PRODUTOS TESTE
+
+        const produtosIniciais = [
+
+            {
+
+                nome: "X-Burger Especial",
+
+                preco: "25.00",
+
+                imagem:
+                "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=200&h=200&auto=format&fit=crop"
+
+            },
+
+            {
+
+                nome: "Batata Suprema",
+
+                preco: "18.00",
+
+                imagem:
+                "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?q=80&w=200&h=200&auto=format&fit=crop"
+
+            }
+
+        ];
+
+        // PRODUTOS
+
+        const produtos =
+
+            JSON.parse(localStorage.getItem('db_produtos'))
+
+            || produtosIniciais;
+
+        // STATUS LOJA
+
+        const statusLoja =
+
+            localStorage.getItem('loja_ativa') !== 'false';
+
+        // CARRINHO
+
+        let total = 0;
+
+        let listaNomes = [];
+
+        // LOJA FECHADA
+
+        if (!statusLoja) {
+
+            document.getElementById('conteudo-app').style.display = 'none';
+
+            document.getElementById('bloqueio').style.display = 'block';
+
+        }
+
+        // =========================
+        // MODAL ENDEREÇO
+        // =========================
+
+        function abrirEndereco(){
+
+            document.getElementById("modalEndereco").style.display = "flex";
+
+        }
+
+        function fecharEndereco(){
+
+            document.getElementById("modalEndereco").style.display = "none";
+
+        }
+
+        // =========================
+        // SALVAR ENDEREÇO
+        // =========================
+
+        function salvarEndereco(){
+
+            const rua =
+
+                document.getElementById("endereco-rua").value;
+
+            const bairro =
+
+                document.getElementById("endereco-bairro").value;
+
+            const ref =
+
+                document.getElementById("endereco-ref").value;
+
+            if(!rua || !bairro){
+
+                alert("Preencha os dados");
+
+                return;
+
+            }
+
+            const endereco = {
+
+                rua,
+                bairro,
+                ref
+
+            };
+
+            localStorage.setItem(
+
+                "endereco_padrao",
+
+                JSON.stringify(endereco)
+
+            );
+
+            alert("Endereço salvo com sucesso");
+
+            fecharEndereco();
+
+        }
+
+        // =========================
+        // USAR ENDEREÇO PADRÃO
+        // =========================
+
+        function usarEnderecoPadrao(){
+
+            const endereco =
+
+                JSON.parse(localStorage.getItem("endereco_padrao"));
+
+            if(!endereco){
+
+                alert("Nenhum endereço salvo");
+
+                return;
+
+            }
+
+            document.getElementById("cliente-rua").value =
+
+                endereco.rua;
+
+            document.getElementById("cliente-bairro").value =
+
+                endereco.bairro;
+
+            document.getElementById("cliente-ref").value =
+
+                endereco.ref;
+
+        }
+
+        // =========================
+        // ADICIONAR ITEM
+        // =========================
+
+        function adicionar(nome, preco) {
+
+            total += parseFloat(preco);
+
+            listaNomes.push(nome);
+
+            document.getElementById('total-carrinho').innerText =
+
+                `R$ ${total.toFixed(2)}`;
+
+            const btn = event.target;
+
+            btn.innerHTML = "✓";
+
+            setTimeout(() => {
+
+                btn.innerHTML = "+";
+
+            }, 600);
+
+        }
+
+        // =========================
+        // ABRIR MODAL PEDIDO
+        // =========================
+
+        function abrirModalPedido(){
+
+            if(total === 0){
+
+                alert("Adicione itens ao carrinho");
+
+                return;
+
+            }
+
+            document.getElementById("modalPedido").style.display = "flex";
+
+            document.getElementById("resumo-pedido").innerHTML = `
+
+                <strong>Itens:</strong><br><br>
+
+                ${listaNomes.join("<br>")}
+
+                <hr>
+
+                <strong>Total:</strong>
+
+                R$ ${total.toFixed(2)}
+
+            `;
+
+        }
+
+        // =========================
+        // FECHAR MODAL PEDIDO
+        // =========================
+
+        function fecharModal(){
+
+            document.getElementById("modalPedido").style.display = "none";
+
+        }
+
+        // =========================
+        // FINALIZAR PEDIDO
+        // =========================
+
+        function finalizarPedido(){
+
+            const nomeCli =
+
+                document.getElementById('cliente-nome').value;
+
+            const ruaCli =
+
+                document.getElementById('cliente-rua').value;
+
+            const bairroCli =
+
+                document.getElementById('cliente-bairro').value;
+
+            const refCli =
+
+                document.getElementById('cliente-ref').value;
+
+            if(!nomeCli || !ruaCli || !bairroCli){
+
+                alert("Preencha os dados");
+
+                return;
+
+            }
+
+            let mensagem = `
+
+🍔 *NOVO PEDIDO - TONHO LANCHES* 🍔
+
+👤 Cliente:
+${nomeCli}
+
+📍 Endereço:
+${ruaCli}
+
+${bairroCli}
+
+🏠 Referência:
+${refCli}
+
+🛒 Pedido:
+${listaNomes.join("\n")}
+
+💰 Total:
+R$ ${total.toFixed(2)}
+
+`;
+
+            const telefone = "5581992320121";
+
+            window.open(
+
+                `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`
+
+            );
+
+        }
+
+        // =========================
+        // RENDER PRODUTOS
+        // =========================
+
+        document.getElementById('lista-cardapio').innerHTML = produtos.map(p => `
+
+            <div class="card-produto">
+
+                <div class="img-container">
+
+                    <img
+                        src="${p.imagem}"
+                        class="img-card"
+                        alt="${p.nome}"
+                    >
+
+                </div>
+
+                <div class="produto-info">
+
+                    <div class="produto-nome">
+
+                        ${p.nome}
+
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <span class="produto-preco">
+
+                            R$ ${p.preco}
+
+                        </span>
+
+                        <button
+                            class="btn-add"
+                            onclick="adicionar('${p.nome}', '${p.preco}')"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `).join('');
+
+    </script>
+
+</body>
+</html>

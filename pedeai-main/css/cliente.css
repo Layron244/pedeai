@@ -1,0 +1,322 @@
+:root {
+    --primary: #ff8800;
+    --dark: #1e1e1e;
+    --bg: #f5f5f5;
+}
+
+body{
+    background: var(--bg);
+    font-family: 'Poppins', sans-serif;
+    padding-bottom: 120px;
+    margin:0;
+}
+
+/* HEADER */
+
+.header{
+    background: linear-gradient(135deg,#241d1d,#a84c0f);
+    color:white;
+    padding:40px 20px;
+    border-radius:0 0 30px 30px;
+    box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+
+.header h4{
+    font-size:32px;
+    font-weight:700;
+}
+
+/* TOPO */
+
+.topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+/* BOTÕES LOGIN */
+
+.acoes-login{
+    display:flex;
+    gap:10px;
+}
+
+.btn-login,
+.btn-cadastro{
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:12px;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.btn-login{
+    background:white;
+    color:#ff7b00;
+}
+
+.btn-cadastro{
+    background:#111;
+    color:white;
+}
+
+.btn-login:hover,
+.btn-cadastro:hover{
+    transform:translateY(-2px);
+}
+
+/* PRODUTOS */
+
+.card-produto{
+    background:white;
+    border-radius:20px;
+    padding:12px;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.card-produto:hover{
+    transform:translateY(-3px);
+}
+
+.img-container{
+    width:100px;
+    height:100px;
+    overflow:hidden;
+    border-radius:15px;
+    min-width:100px;
+}
+
+.img-card{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.produto-info{
+    flex:1;
+    padding-left:15px;
+}
+
+.produto-nome{
+    font-weight:700;
+    font-size:18px;
+    margin-bottom:5px;
+}
+
+.produto-preco{
+    color:var(--primary);
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* BOTÃO ADD */
+
+.btn-add{
+    border:none;
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:var(--primary);
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn-add:hover{
+    transform:scale(1.05);
+}
+
+/* CARRINHO */
+
+.cart-bar{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    width:90%;
+    max-width:500px;
+    background:#111;
+    color:white;
+    border-radius:20px;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+    box-shadow:0 5px 20px rgba(0,0,0,.3);
+    z-index:999;
+}
+
+.total-label{
+    display:block;
+    font-size:13px;
+    color:#bbb;
+}
+
+.total-valor{
+    color:#ffae00;
+    font-size:22px;
+    font-weight:bold;
+}
+
+/* MODAL */
+
+.modal-pedido{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal-conteudo{
+    background:white;
+    width:90%;
+    max-width:450px;
+    border-radius:25px;
+    padding:25px;
+    animation:subir .2s;
+}
+
+@keyframes subir{
+
+    from{
+        transform:translateY(30px);
+        opacity:0;
+    }
+
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+
+}
+
+.modal-conteudo h3{
+    margin-bottom:20px;
+    text-align:center;
+}
+
+/* RESUMO PEDIDO */
+
+#resumo-pedido{
+    background:#f5f5f5;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:20px;
+    max-height:200px;
+    overflow:auto;
+}
+
+/* INPUTS */
+
+.form-control{
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+    border:1px solid #ddd;
+    box-shadow:none;
+}
+
+/* BOTÃO ENVIAR */
+
+.btn-enviar{
+    width:100%;
+    border:none;
+    background:#25d366;
+    color:white;
+    padding:15px;
+    border-radius:12px;
+    font-size:18px;
+    font-weight:bold;
+    margin-top:10px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn-enviar:hover{
+    transform:translateY(-2px);
+}
+
+/* BOTÃO FECHAR */
+
+.btn-fechar{
+    width:100%;
+    border:none;
+    background:#ddd;
+    padding:12px;
+    border-radius:12px;
+    margin-top:10px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn-fechar:hover{
+    background:#ccc;
+}
+
+/* BLOQUEIO */
+
+#bloqueio{
+    display:none;
+    text-align:center;
+    padding:120px 20px;
+}
+
+#bloqueio h1{
+    font-size:80px;
+}
+
+/* ENDEREÇO */
+
+.btn-endereco{
+
+    border:none;
+
+    background:#25d366;
+
+    color:white;
+
+    padding:10px 15px;
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+}
+
+/* BOTÃO ENDEREÇO PADRÃO */
+
+.btn-endereco-padrao{
+
+    width:100%;
+
+    border:none;
+
+    background:#ff8800;
+
+    color:white;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    margin-top:5px;
+
+    margin-bottom:10px;
+
+    font-weight:bold;
+
+}
