@@ -1,9 +1,9 @@
 <?php
 
-$host = "localhost";
-$user = "root";
-$pass = "";
-$banco = "tonho_lanches";
+$host = "sql213.infinityfree.com";
+$user = "if0_41997060";
+$pass = "graucabo1234";
+$banco = "if0_41997060_tonho";
 
 $conexao = new mysqli($host, $user, $pass, $banco);
 

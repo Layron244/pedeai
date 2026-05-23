@@ -1,5 +1,17 @@
 <?php
 session_start();
+session_unset();
+session_destroy();
+
+// ALTERADO: Agora volta para a index.php, onde aparecem os botões de Entrar e Cadastrar
+header("Location: ../index.php");
+exit();
+?>
+
+
+pastaphp/login.php
+<?php
+session_start();
 include("conectar.php");
 
 $usuario = $_POST['usuario'];

@@ -231,3 +231,22 @@ select{
     margin-top:10px;
 
 }
+
+.btn-adicionar {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #2ecc71; /* Verde chamativo para ações de adicionar */
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    transition: background 0.3s;
+    margin-right: 5px; /* Dá um espacinho do botão Trocar Conta */
+}
+
+.btn-adicionar:hover {
+    background-color: #27ae60; /* Verde um pouco mais escuro ao passar o mouse */
+}
+
